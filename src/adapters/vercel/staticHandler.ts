@@ -12,7 +12,7 @@ interface Args {
   collection: CollectionConfig
 }
 
-const getStaticHandler = ({ bucketName, storeId, collection }: Args): StaticHandler => {
+export const getStaticHandler = ({ bucketName, storeId, collection }: Args): StaticHandler => {
   return async (req, res, next) => {
     try {
       const prefix = await getFilePrefix({ req, collection })
@@ -47,5 +47,3 @@ const getStaticHandler = ({ bucketName, storeId, collection }: Args): StaticHand
     }
   }
 }
-
-export default getStaticHandler

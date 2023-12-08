@@ -12,7 +12,7 @@ interface Args {
   cacheControlMaxAge?: number
 }
 
-const getHandleUpload = ({
+export const getHandleUpload = ({
   token,
   bucketName,
   access = 'public',
@@ -40,5 +40,3 @@ const getHandleUpload = ({
     return data
   }
 }
-
-export default getHandleUpload

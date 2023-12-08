@@ -7,7 +7,7 @@ const urlField: Field = {
   hooks: {
     afterRead: [
       ({ value }) => {
-        console.log('hello from hook')
+        console.log('hello from hook', value)
         return value
       },
     ],

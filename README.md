@@ -66,7 +66,7 @@ This plugin supports the following adapters:
 
 However, you can create your own adapter for any third-party service you would like to use.
 
-All adapters are implemented `dev` directory's [Payload Config](https://github.com/payloadcms/plugin-cloud-storage/blob/master/dev/src/payload.config.ts). See this file for examples.
+All adapters are implemented in `dev` directory's [Payload Config](https://github.com/payloadcms/plugin-cloud-storage/blob/master/dev/src/payload.config.ts). See this file for examples.
 
 ## Plugin options
 

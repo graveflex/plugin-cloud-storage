@@ -7,7 +7,7 @@ interface Args {
   bucketName: string
 }
 
-const getGenerateURL = ({ storeId, bucketName }: Args): GenerateURL => {
+export const getGenerateURL = ({ storeId, bucketName }: Args): GenerateURL => {
   return ({ filename, prefix = '' }) => {
     return `https://${storeId}.public.blob.vercel-storage.com/${bucketName}/${path.posix.join(
       prefix,
@@ -15,5 +15,3 @@ const getGenerateURL = ({ storeId, bucketName }: Args): GenerateURL => {
     )}`
   }
 }
-
-export default getGenerateURL
