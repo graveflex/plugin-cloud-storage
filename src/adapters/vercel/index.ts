@@ -7,14 +7,23 @@ import { getStaticHandler } from './staticHandler'
 import { extendWebpackConfig } from './webpack'
 
 export interface Args {
+  // URL for blob uploads
+  baseUrl: string
   token: string
-  storeId: string
+  storeId: string // DEPRECATED
   bucketName: string
+  // https://vercel.com/docs/storage/vercel-blob/using-blob-sdk#put
+  config?: {
+    bucketName?: string
+    addRandomSuffix?: boolean
+    cacheControlMaxAge?: number
+  }
 }
 
+// TODO: swap `storeId` for url as `baseUrl`
 // TODO: handle config object here
-// TODO: swap `storeId` for url
-export const vercelBlobAdapter = ({ token, storeId, bucketName }: Args): Adapter => {
+export const vercelBlobAdapter = ({ token, storeId, bucketName, config = {} }: Args): Adapter => {
+  // read config options and pass to `handleUpload`
   return ({ collection }): GeneratedAdapter => {
     return {
       handleUpload: getHandleUpload({ token, bucketName }),

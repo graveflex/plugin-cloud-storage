@@ -21,8 +21,16 @@ export const getHandleUpload = ({
   cacheControlMaxAge = 31556926,
 }: Args): HandleUpload => {
   return async ({ data, file }) => {
+    // TODO: handle uploads > 4.5MB
+    // https://vercel.com/docs/storage/vercel-blob/quickstart#server-and-client-uploads
     const fileKey = path.posix.join(data.prefix || prefix, file.filename)
     const filePath = `${bucketName}/${fileKey}`
+
+    // 1. How big is the file?
+    // 2. If < 4.5MB, use `put`
+    // 3. If < 500MB use `handleUpload`
+    // 4. Throw error if > 500MB
+
     const resp = await put(filePath, file.buffer, {
       token,
       contentType: file.mimeType,

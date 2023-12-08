@@ -2,7 +2,7 @@ version: "3"
 
 services:
   azure-storage:
-    image: mcr.microsoft.com/azure-storage/azurite:3.18.0
+    image: mcr.microsoft.com/azure-storage/azurite
     restart: always
     command: "azurite --loose --blobHost 0.0.0.0 --tableHost 0.0.0.0 --queueHost 0.0.0.0"
     ports:
