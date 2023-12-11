@@ -2,25 +2,24 @@ import path from 'path'
 import { head } from '@vercel/blob'
 import type { CollectionConfig } from 'payload/types'
 
-import type { StaticHandler, VercelBlobConfig } from '../../types'
+import type { StaticHandler } from '../../types'
 import { getFilePrefix } from '../../utilities/getFilePrefix'
 
+interface Args {
+  baseUrl: string
+}
+
 export const getStaticHandler = (
-  { optionalUrlPrefix, storeId, baseUrl, access }: VercelBlobConfig,
+  { baseUrl }: Args,
   collection: CollectionConfig,
 ): StaticHandler => {
   return async (req, res, next) => {
     try {
       const prefix = await getFilePrefix({ req, collection })
 
-      let url = `https://${storeId}.${access}.${baseUrl}`
+      const fileUrl = `${baseUrl}/${path.posix.join(prefix, req.params.filename)}`
 
-      if (optionalUrlPrefix) {
-        url = `${url}/${optionalUrlPrefix}`
-      }
-      const fileUrl = `${url}/${path.posix.join(prefix, req.params.filename)}`
       const blobMetadata = await head(fileUrl)
-
       if (blobMetadata) {
         const { contentType, size } = blobMetadata
         const response = await fetch(fileUrl)

@@ -1,4 +1,4 @@
-import type { Adapter, GeneratedAdapter, VercelBlobConfig } from '../../types'
+import type { Adapter, GeneratedAdapter } from '../../types'
 
 import { getGenerateURL } from './generateURL'
 import { getHandleDelete } from './handleDelete'
@@ -27,8 +27,6 @@ export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args
     optionalUrlPrefix ? `/${optionalUrlPrefix}` : ''
   }`
 
-  // TODO: conditionally tack on `optionalUrlPrefix`
-  // TODO: utilize `prefix` in the same way other adapters are
   return ({ collection, prefix }): GeneratedAdapter => {
     return {
       handleUpload: getHandleUpload({
@@ -37,10 +35,11 @@ export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args
         access,
         addRandomSuffix,
         cacheControlMaxAge,
+        optionalUrlPrefix,
       }),
       handleDelete: getHandleDelete({ token, baseUrl, prefix }),
       generateURL: getGenerateURL({ baseUrl, prefix }),
-      staticHandler: getStaticHandler({ token, options, prefix }, collection),
+      staticHandler: getStaticHandler({ baseUrl }, collection),
       webpack: extendWebpackConfig,
     }
   }
