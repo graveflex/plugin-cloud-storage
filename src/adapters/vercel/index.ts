@@ -19,7 +19,6 @@ export interface Args {
   }
 }
 
-console.log('@--> here')
 export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args): Adapter => {
   // read config options and pass to `handleUpload`
   // TODO: generate baseURL here and pass to functions
@@ -39,16 +38,9 @@ export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args
         addRandomSuffix,
         cacheControlMaxAge,
       }),
-      handleDelete: getHandleDelete(
-        token,
-        baseUrl,
-        access,
-        addRandomSuffix,
-        cacheControlMaxAge,
-        prefix,
-      ),
-      generateURL: getGenerateURL(options, baseUrl, prefix),
-      staticHandler: getStaticHandler(token, options, collection, prefix),
+      handleDelete: getHandleDelete({ token, baseUrl, prefix }),
+      generateURL: getGenerateURL({ options, baseUrl, prefix }),
+      staticHandler: getStaticHandler({ token, options, prefix }, collection),
       webpack: extendWebpackConfig,
     }
   }
