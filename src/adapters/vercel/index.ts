@@ -21,18 +21,34 @@ export interface Args {
 
 console.log('@--> here')
 export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args): Adapter => {
-  console.log('@--> here info here')
   // read config options and pass to `handleUpload`
   // TODO: generate baseURL here and pass to functions
-  // ex. const baseUrl = `https://${storeId}.${access}.${baseUrl}`
+  const { access, optionalUrlPrefix, addRandomSuffix, cacheControlMaxAge } = options
+  const baseUrl = `https://${storeId}.${access}.${endpointUrl}${
+    optionalUrlPrefix ? `/${optionalUrlPrefix}` : ''
+  }`
+
   // TODO: conditionally tack on `optionalUrlPrefix`
   // TODO: utilize `prefix` in the same way other adapters are
   return ({ collection, prefix }): GeneratedAdapter => {
     return {
-      handleUpload: getHandleUpload(options),
-      handleDelete: getHandleDelete(options),
-      generateURL: getGenerateURL(options),
-      staticHandler: getStaticHandler(options, collection),
+      handleUpload: getHandleUpload({
+        token,
+        prefix,
+        access,
+        addRandomSuffix,
+        cacheControlMaxAge,
+      }),
+      handleDelete: getHandleDelete(
+        token,
+        baseUrl,
+        access,
+        addRandomSuffix,
+        cacheControlMaxAge,
+        prefix,
+      ),
+      generateURL: getGenerateURL(options, baseUrl, prefix),
+      staticHandler: getStaticHandler(token, options, collection, prefix),
       webpack: extendWebpackConfig,
     }
   }
