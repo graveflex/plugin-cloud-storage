@@ -1,21 +1,23 @@
 import { del } from '@vercel/blob'
 import path from 'path'
-import type { HandleDelete } from '../../types'
 
-interface Args {
-  token: string
-  storeId: string
-  bucketName: string
-}
+import type { HandleDelete, VercelBlobConfig } from '../../types'
 
-export const getHandleDelete = ({ token, bucketName, storeId }: Args): HandleDelete => {
+export const getHandleDelete = ({
+  token,
+  storeId,
+  baseUrl,
+  access,
+  optionalUrlPrefix,
+}: VercelBlobConfig): HandleDelete => {
   return async ({ filename, doc: { prefix = '' } }) => {
-    const fileUrl = `https://${storeId}.public.blob.vercel-storage.com/${bucketName}/${path.posix.join(
-      prefix,
-      filename,
-    )}`
+    let url = `https://${storeId}.${access}.${baseUrl}`
 
-    // TODO: do we need to return this?
+    if (optionalUrlPrefix) {
+      url = `${url}/${optionalUrlPrefix}`
+    }
+    const fileUrl = `${url}/${path.posix.join(prefix, filename)}`
+
     const deletedBlob = await del(fileUrl, { token })
     return deletedBlob
   }

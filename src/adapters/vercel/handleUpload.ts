@@ -1,37 +1,21 @@
 import { put } from '@vercel/blob'
+import { upload } from '@vercel/blob/client'
 import path from 'path'
 
-import type { HandleUpload } from '../../types'
-
-interface Args {
-  token: string
-  bucketName: string
-  access?: 'public'
-  prefix?: string
-  addRandomSuffix?: boolean
-  cacheControlMaxAge?: number
-}
+import type { HandleUpload, VercelBlobConfig } from '../../types'
 
 export const getHandleUpload = ({
   token,
-  bucketName,
   access = 'public',
-  prefix = '',
-  addRandomSuffix = false,
-  cacheControlMaxAge = 31556926,
-}: Args): HandleUpload => {
+  addRandomSuffix,
+  cacheControlMaxAge,
+  optionalUrlPrefix,
+}: VercelBlobConfig): HandleUpload => {
   return async ({ data, file }) => {
-    // TODO: handle uploads > 4.5MB
-    // https://vercel.com/docs/storage/vercel-blob/quickstart#server-and-client-uploads
+    const prefix = optionalUrlPrefix || ''
     const fileKey = path.posix.join(data.prefix || prefix, file.filename)
-    const filePath = `${bucketName}/${fileKey}`
 
-    // 1. How big is the file?
-    // 2. If < 4.5MB, use `put`
-    // 3. If < 500MB use `handleUpload`
-    // 4. Throw error if > 500MB
-
-    const resp = await put(filePath, file.buffer, {
+    await put(fileKey, file.buffer, {
       token,
       contentType: file.mimeType,
       access,
@@ -39,7 +23,30 @@ export const getHandleUpload = ({
       cacheControlMaxAge,
     })
 
-    console.log('@--> data', data)
+    // TODO: handle uploads over 4.5mb -- notes on attempt:
+    // error when running: upload: 'Error: Vercel Blob: client/`upload` must be called from a client environment' -- need to figure out how to access payload's client environment
+
+    // const fileSizeInMb = typeof file?.filesize === 'number' ? file.filesize / 1000000 : 0 // need better default here
+    // if (fileSizeInMb < 4.5) {
+    //   blobResult = await put(fileKey, file.buffer, {
+    //     token,
+    //     contentType: file.mimeType,
+    //     access,
+    //     addRandomSuffix,
+    //     cacheControlMaxAge,
+    //   })
+    // } else if (fileSizeInMb > 4.5 && fileSizeInMb < 500) {
+    //   blobResult = await upload(fileKey, file.buffer, {
+    //     access: 'public',
+    //     handleUploadUrl: '/api/avatar/upload',
+    //   })
+    // }
+
+    // const blobResult = await upload(file.filename, file.buffer, {
+    //   access: 'public',
+    //   handleUploadUrl: fileKey,
+    //   contentType: file.mimeType,
+    // })
 
     if (addRandomSuffix) {
       // handle updating data

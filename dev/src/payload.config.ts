@@ -57,8 +57,12 @@ if (process.env.PAYLOAD_PUBLIC_CLOUD_STORAGE_ADAPTER === 'gcs') {
 if (process.env.PAYLOAD_PUBLIC_CLOUD_STORAGE_ADAPTER === 'vercel') {
   adapter = vercelBlobAdapter({
     token: process.env.BLOB_READ_WRITE_TOKEN,
-    storeId: process.env.VERCEL_STORE_ID,
-    bucketName: process.env.VERCEL_BUCKET_NAME,
+    baseUrl: process.env.VERCEL_BLOB_BASE_URL,
+    storeId: process.env.VERCEL_BLOB_STORE_ID,
+    access: 'public', // 'public' access control is currently the only option.
+    optionalUrlPrefix: process.env.VERCEL_OPTIONAL_URL_PREFIX,
+    addRandomSuffix: false,
+    cacheControlMaxAge: 31556926, // should this be set in the .env? or something that is configurable easily here?
   })
 }
 
