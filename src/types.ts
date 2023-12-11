@@ -77,13 +77,3 @@ export interface PluginOptions {
   enabled?: boolean
   collections: Record<string, CollectionOptions>
 }
-
-export interface VercelBlobConfig {
-  token: string
-  baseUrl: string
-  storeId: string
-  access: 'public' // access type is currently set to 'public', until 'private' is available
-  optionalUrlPrefix?: string
-  addRandomSuffix?: boolean
-  cacheControlMaxAge?: number
-}

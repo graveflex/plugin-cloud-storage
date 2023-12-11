@@ -7,23 +7,20 @@ import { getStaticHandler } from './staticHandler'
 import { extendWebpackConfig } from './webpack'
 
 // TODO: move VercelBlobConfig to this file as `Args`
-export interface Args {}
-
-// TODO: use this as a reference
-/* {
- *  token,
- *  baseUrl, // RENAME
- *  storeId,
- *  config {
- *    access,
- *    optionalUrlPrefix,
- *    addRandomSuffix,
- *    cacheControlMaxAge
- *  }
- * } */
+export interface Args {
+  token: string
+  endpointUrl: string // RENAME
+  storeId: string
+  options: {
+    access: 'public'
+    optionalUrlPrefix: string
+    addRandomSuffix: boolean
+    cacheControlMaxAge: number
+  }
+}
 
 console.log('@--> here')
-export const vercelBlobAdapter = (config: VercelBlobConfig): Adapter => {
+export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args): Adapter => {
   console.log('@--> here info here')
   // read config options and pass to `handleUpload`
   // TODO: generate baseURL here and pass to functions
@@ -32,10 +29,10 @@ export const vercelBlobAdapter = (config: VercelBlobConfig): Adapter => {
   // TODO: utilize `prefix` in the same way other adapters are
   return ({ collection, prefix }): GeneratedAdapter => {
     return {
-      handleUpload: getHandleUpload(config),
-      handleDelete: getHandleDelete(config),
-      generateURL: getGenerateURL(config),
-      staticHandler: getStaticHandler(config, collection),
+      handleUpload: getHandleUpload(options),
+      handleDelete: getHandleDelete(options),
+      generateURL: getGenerateURL(options),
+      staticHandler: getStaticHandler(options, collection),
       webpack: extendWebpackConfig,
     }
   }
