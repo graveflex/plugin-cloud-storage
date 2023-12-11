@@ -1,19 +1,14 @@
 import path from 'path'
 
-import type { GenerateURL, VercelBlobConfig } from '../../types'
+import type { GenerateURL } from '../../types'
 
-export const getGenerateURL = ({
-  storeId,
-  baseUrl,
-  access,
-  optionalUrlPrefix,
-}: VercelBlobConfig): GenerateURL => {
+interface Args {
+  baseUrl: string
+  prefix?: string
+}
+
+export const getGenerateURL = ({ baseUrl }: Args): GenerateURL => {
   return ({ filename, prefix = '' }) => {
-    let url = `https://${storeId}.${access}.${baseUrl}`
-
-    if (optionalUrlPrefix) {
-      url = `${url}/${optionalUrlPrefix}`
-    }
-    return `${url}/${path.posix.join(prefix, filename)}`
+    return `${baseUrl}/${path.posix.join(prefix, filename)}`
   }
 }

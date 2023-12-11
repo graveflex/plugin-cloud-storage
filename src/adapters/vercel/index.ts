@@ -39,7 +39,7 @@ export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args
         cacheControlMaxAge,
       }),
       handleDelete: getHandleDelete({ token, baseUrl, prefix }),
-      generateURL: getGenerateURL({ options, baseUrl, prefix }),
+      generateURL: getGenerateURL({ baseUrl, prefix }),
       staticHandler: getStaticHandler({ token, options, prefix }, collection),
       webpack: extendWebpackConfig,
     }
