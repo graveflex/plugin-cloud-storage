@@ -1,7 +1,4 @@
 /* eslint-disable no-console */
-import type { a as PutBlobResult } from '@vercel/blob/dist/put-96a1f07e'
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
-
 import type { Field, SanitizedCollectionConfig } from 'payload/types'
 
 import { VercelUploadComponent } from './CustomComponents/VercelUploadComponent'
@@ -13,7 +10,6 @@ const urlField: Field = {
   hooks: {
     afterRead: [
       ({ value }) => {
-        console.log('hello from hook', value)
         return value
       },
     ],

@@ -1,4 +1,4 @@
-import type { PutBlobResult } from '@vercel/blob'
+/* eslint-disable no-console */
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 import type { PayloadHandler } from 'payload/config'
 
@@ -25,20 +25,14 @@ export const handleVercelUpload: PayloadHandler = async (req, res) => {
           tokenPayload: JSON.stringify({ token }),
           addRandomSuffix: false,
           cacheControlMaxAge: 31556926,
-          // allowedContentTypes: contentTypes,
-          // maximumSizeInBytes: maxBytes,
         }
       },
-      onUploadCompleted: async ({
-        url,
-        pathname,
-        contentDisposition,
-        contentType,
-      }: PutBlobResult) => {
-        console.log('Upload completed for url:', url)
-        console.log('Upload completed for pathname:', pathname)
-        console.log('Upload completed for contentDisposition:', contentDisposition)
-        console.log('Upload completed for contentType:', contentType)
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        console.log('blob upload completed', blob)
+        console.log('tokenPayload', tokenPayload)
+        if (!blob) {
+          throw new Error()
+        }
       },
     })
 

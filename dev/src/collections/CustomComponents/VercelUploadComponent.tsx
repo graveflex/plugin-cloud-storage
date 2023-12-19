@@ -4,7 +4,6 @@ import { upload } from '@vercel/blob/client'
 import { useAllFormFields, reduceFieldsToValues } from 'payload/components/forms'
 import { useConfig } from 'payload/components/utilities'
 
-
 import type { CustomSaveButtonProps } from 'payload/types'
 
 // custom react component, client-side.
@@ -22,7 +21,6 @@ export const VercelUploadComponent: CustomSaveButtonProps = ({
   const payloadServerUrl = payloadConfig.serverURL
 
   const handleFormSubmit = async () => {
-    save()
     console.log('formData', formData.file)
     const originalFileName = await formData.file.name
     const fileName = `${
@@ -42,9 +40,15 @@ export const VercelUploadComponent: CustomSaveButtonProps = ({
           clientPayload: 'hello-from-upload',
         })
 
+        if (!blobResult) {
+          throw new Error()
+        }
+
         console.log('blobResult', blobResult)
+        // save to local DB after blob result has generated
+        save()
       } catch (error) {
-        console.log('error uploading blob', error)
+        console.log('error uploading blob to vercel', error)
       }
     }
   }
