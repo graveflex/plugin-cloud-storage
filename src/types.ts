@@ -1,4 +1,5 @@
 import type { NextFunction, Response } from 'express'
+import { Payload } from 'payload'
 import type { TypeWithID } from 'payload/dist/collections/config/types'
 import type { FileData, ImageSize } from 'payload/dist/uploads/types'
 import type { CollectionConfig, PayloadRequest } from 'payload/types'
@@ -14,8 +15,7 @@ export interface File {
 
 export type HandleUpload = (args: {
   collection: CollectionConfig
-  request: Request
-  payloadRequest: PayloadRequest
+  req: PayloadRequest
   data: any
   file: File
 }) => Promise<void> | void
