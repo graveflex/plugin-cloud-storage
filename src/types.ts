@@ -14,7 +14,8 @@ export interface File {
 
 export type HandleUpload = (args: {
   collection: CollectionConfig
-  req: PayloadRequest
+  request: Request
+  payloadRequest: PayloadRequest
   data: any
   file: File
 }) => Promise<void> | void

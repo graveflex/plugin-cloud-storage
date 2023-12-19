@@ -7,16 +7,18 @@ import { getStaticHandler } from './staticHandler'
 import { extendWebpackConfig } from './webpack'
 
 // TODO: move VercelBlobConfig to this file as `Args`
+
+export interface VercelConfigArgs {
+  access: 'public'
+  optionalUrlPrefix: string
+  addRandomSuffix: boolean
+  cacheControlMaxAge: number
+}
 export interface Args {
   token: string
   endpointUrl: string // RENAME
   storeId: string
-  options: {
-    access: 'public'
-    optionalUrlPrefix: string
-    addRandomSuffix: boolean
-    cacheControlMaxAge: number
-  }
+  options: VercelConfigArgs
 }
 
 export const vercelBlobAdapter = ({ token, endpointUrl, storeId, options }: Args): Adapter => {
