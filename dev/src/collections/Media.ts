@@ -1,5 +1,8 @@
 /* eslint-disable no-console */
-import type { CollectionConfig, Field } from 'payload/types'
+import type { Field, SanitizedCollectionConfig } from 'payload/types'
+
+import { VercelUploadComponent } from './CustomComponents/VercelUploadComponent'
+import { handleVercelUpload } from './CustomComponents/handleServerUpload'
 
 const urlField: Field = {
   name: 'url',
@@ -7,15 +10,23 @@ const urlField: Field = {
   hooks: {
     afterRead: [
       ({ value }) => {
-        console.log('hello from hook')
         return value
       },
     ],
   },
 }
 
-export const Media: CollectionConfig = {
+export const Media: SanitizedCollectionConfig = {
   slug: 'media',
+  admin: {
+    components: {
+      // @ts-expect-error
+      // 'edit' errors because its expecting other cusomtized components, eventhough they're set as optional
+      edit: {
+        SaveButton: VercelUploadComponent,
+      },
+    },
+  },
   upload: {
     imageSizes: [
       {
@@ -31,6 +42,9 @@ export const Media: CollectionConfig = {
         name: 'sixteenByNineMedium',
       },
     ],
+    staticDir: '/media',
+    staticURL: '/media',
+    disableLocalStorage: false,
   },
   fields: [
     {
@@ -51,6 +65,13 @@ export const Media: CollectionConfig = {
           fields: [urlField],
         },
       ],
+    },
+  ],
+  endpoints: [
+    {
+      path: '/vercel-upload',
+      method: 'post',
+      handler: handleVercelUpload,
     },
   ],
 }

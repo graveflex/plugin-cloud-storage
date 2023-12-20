@@ -5,6 +5,8 @@ import { cloudStorage } from '../../src'
 import { s3Adapter } from '../../src/adapters/s3'
 import { gcsAdapter } from '../../src/adapters/gcs'
 import { azureBlobStorageAdapter } from '../../src/adapters/azure'
+import type { VercelConfigArgs } from '../../src/adapters/vercel'
+import { vercelBlobAdapter } from '../../src/adapters/vercel'
 import type { Adapter } from '../../src/types'
 import { Media } from './collections/Media'
 
@@ -53,10 +55,28 @@ if (process.env.PAYLOAD_PUBLIC_CLOUD_STORAGE_ADAPTER === 'gcs') {
   })
 }
 
+// edit this config as seen neccessary
+const vercelBlobConfig: VercelConfigArgs = {
+  access: 'public',
+  optionalUrlPrefix: 'desired-url-prefix',
+  addRandomSuffix: false,
+  cacheControlMaxAge: 31556926,
+}
+
+if (process.env.PAYLOAD_PUBLIC_CLOUD_STORAGE_ADAPTER === 'vercel') {
+  adapter = vercelBlobAdapter({
+    token: process.env.BLOB_READ_WRITE_TOKEN,
+    endpointUrl: process.env.VERCEL_BLOB_ENDPOINT_URL,
+    storeId: process.env.VERCEL_BLOB_STORE_ID,
+    options: vercelBlobConfig,
+  })
+}
+
 export default buildConfig({
   serverURL: 'http://localhost:3000',
   collections: [Media, Users],
   upload: uploadOptions,
+  custom: { vercelConfig: vercelBlobConfig },
   admin: {
     // NOTE - these webpack extensions are only required
     // for development of this plugin.
@@ -84,6 +104,10 @@ export default buildConfig({
             [path.resolve(__dirname, '../../src/adapters/azure/index')]: path.resolve(
               __dirname,
               '../../src/adapters/azure/mock.js',
+            ),
+            [path.resolve(__dirname, '../../src/adapters/vercel/index')]: path.resolve(
+              __dirname,
+              '../../src/adapters/vercel/mock.js',
             ),
           },
         },

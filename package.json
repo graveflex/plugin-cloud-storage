@@ -17,6 +17,7 @@
     "@aws-sdk/lib-storage": "^3.267.0",
     "@azure/storage-blob": "^12.11.0",
     "@google-cloud/storage": "^6.4.1",
+    "@vercel/blob": "^0.15.1",
     "payload": "^1.7.2 || ^2.0.0"
   },
   "peerDependenciesMeta": {
@@ -30,6 +31,9 @@
       "optional": true
     },
     "@google-cloud/storage": {
+      "optional": true
+    },
+    "@vercel/blob": {
       "optional": true
     }
   },
@@ -46,6 +50,7 @@
     "@types/express": "^4.17.9",
     "@typescript-eslint/eslint-plugin": "5.12.1",
     "@typescript-eslint/parser": "5.12.1",
+    "@vercel/blob": "^0.15.1",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "eslint": "^8.19.0",
